@@ -1,0 +1,23 @@
+# Personal data: never published. Real files live in private/;
+# data, inputs, outputs and "archivos de guia" are symlinks into it (created by scripts/init.sh).
+/private/
+/data
+/inputs
+/outputs
+/archivos de guia
+
+# Claude Code local state
+.claude/settings.local.json
+.claude/projects/
+
+# Secrets and OS/editor noise
+.env
+.env.*
+*.pem
+*.key
+.DS_Store
+.idea/
+.vscode/
+venv/
+.venv/
+__pycache__/
