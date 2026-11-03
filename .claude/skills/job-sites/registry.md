@@ -19,6 +19,15 @@ Update the status column as you use each site.
 | Company ATS pages | Direct company pages | partial | - | Links often go dead (closed) |
 | Multiplica Talent | Colombian staffing | blocked | - | Page blocked for the agent |
 
+## Candidates (found by `site-discovery`, `untested`)
+One row per candidate: URL, why it fits, how to search it. `job-round` tests one per round, then promotes it to the table above or marks it `dormant`/`blocked`.
+
+| Site | URL | Why it fits | Added |
+|------|-----|-------------|-------|
+
+## Per-user state
+Login state, last search run and hit rate per site are personal and live in `data/site-status.md`, not here.
+
 ## Search URL cheat-sheet
 - LinkedIn: `https://www.linkedin.com/jobs/search/?keywords=<q>&location=<place>&f_WT=2&f_TPR=r604800` (`f_WT=2` remote, `f_WT=1` on-site, `f_WT=3` hybrid; `f_TPR=r604800` week, `r2592000` month; `f_E=3,4` associate/mid-senior; `f_JT=F` full-time; `f_AL=true` Easy Apply only).
 - Get on Board: `https://www.getonbrd.com/jobs/tag/nestjs`, `.../tag/node-js`.

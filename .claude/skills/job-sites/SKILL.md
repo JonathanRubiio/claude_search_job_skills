@@ -19,6 +19,9 @@ Knowledge base so the work is repeatable by anyone with this project and a logge
 3. After touching a site, **feed back**: update the playbook (new gotcha, new question, changed UI) and `registry.md` status. Do this in the same turn, before reporting.
 4. New site -> copy `_template.md`, fill as you go, add a row to `registry.md`.
 
+## Growing the registry
+`site-discovery` adds candidate sites; `job-round` tests and rotates through them one by one; `job-preflight` checks logins first. Per-user login state is in `data/site-status.md`.
+
 ## Rules
 - The user logs in. Never type credentials.
 - LinkedIn is read-only for discovery (see its playbook); applying there only on explicit request.
