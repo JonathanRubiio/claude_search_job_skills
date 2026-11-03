@@ -28,7 +28,7 @@
 ## Broad-search log (rule: broad first)
 - `https://co.computrabajo.com/trabajo-de-desarrollador-de-software` -> 261 offers (2026-11-03). Sorted by recency. Result: almost all on-site Bogotá/Medellín/Cali/Manizales or Django/Angular/C#/.NET/VB; 0 viable. The generic list is still the right first pass because it surfaces roles whose title has no stack.
 - Broad queries run 2026-11-03 (all `?pubdate=15` or 30): `desarrollador-remoto` (65 offers), `ingeniero-de-software-remoto` (12), `desarrollador-en-cucuta` (60, mixes in remote national roles), `sistemas-en-cucuta` (204, nothing for dev). Only viable find came from `desarrollador-en-cucuta`: Integral Group Full Stack Senior (remote, indefinido). Stack queries alone had missed it.
-- Cúcuta-filtered pages also list remote roles from other cities: read those too.
+- City-filtered pages also list remote roles from other cities: read those too.
 - Next broad queries to run each session: `trabajo-de-desarrollador`, `trabajo-de-programador`, `trabajo-de-ingeniero-de-software`, each with `-remoto` and with `-en-cucuta`; use `?pubdate=15` and page `?p=2`, `?p=3`.
 
 ## Not done / open
