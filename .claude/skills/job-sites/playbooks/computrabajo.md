@@ -33,3 +33,13 @@
 
 ## Not done / open
 - Add older jobs, skills and languages from `data/profile.md`.
+
+## Profile completion (example run: 54% -> 95%)
+URL `https://candidato.co.computrabajo.com/candidate/cv/edit/` (candidate subdomain works when logged in).
+- Photo: `find` the file input (`uploadpic`) -> `file_upload` -> crop modal -> "Guardar cambios" (+~20%).
+- Headline/summary (pencil by the title): description max 500 chars; Area (required) is a custom dropdown: open it, then CLICK "Informática / Telecomunicaciones" (a JS-set value picked a wrong item). Departamento accepts a `select` value + change event (set your department). "Situación actual": custom dropdown, click "Estoy buscando trabajo activamente".
+- Languages: `select[name=LanguageSelected]` (47 Español, 77 Inglés) and `LevelSelected` (2 Básico, 5 Nativo) + change event saves immediately; the chip renders late, reload to verify.
+- Skills: click "Añadir", type each skill + Enter, then "Añadir" (+10%).
+- CV document: separate page `/candidate/cv/uploadcv`, `find` file input -> `file_upload` the PDF (+10%).
+- Left untouched on purpose: personal-data modal (needs ID type + cédula): user must do it. Check afterwards that city, name and surname were not duplicated or defaulted wrongly.
+- Compare any pre-filled summary against `data/profile.md` and correct wrong figures.
