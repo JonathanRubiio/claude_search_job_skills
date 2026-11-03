@@ -7,12 +7,13 @@ err() { echo "FAIL: $*"; fail=1; }
 
 for d in .claude/skills/*/; do
   n=$(basename "$d"); f="$d/SKILL.md"
+  [[ $n =~ ^[a-z0-9-]+$ ]] || { err "$n: invalid skill directory name"; continue; }
   [ -f "$f" ] || { err "$n: missing SKILL.md"; continue; }
   head -1 "$f" | grep -q '^---$' || err "$n: no frontmatter"
-  grep -q "^name: $n$" "$f" || err "$n: frontmatter name must equal directory name"
+  grep -qxF "name: $n" "$f" || err "$n: frontmatter name must equal directory name"
   grep -q '^description: .\{40,\}' "$f" || err "$n: description missing or too short"
-  grep -q "\`$n\`" README.md || err "$n: not documented in README.md"
-  grep -q "\`$n\`" README.es.md || err "$n: not documented in README.es.md"
+  grep -qF "\`$n\`" README.md || err "$n: not documented in README.md"
+  grep -qF "\`$n\`" README.es.md || err "$n: not documented in README.es.md"
 done
 
 for f in .claude/hooks/*.sh scripts/*.sh; do bash -n "$f" || err "$f: syntax error"; done
@@ -20,10 +21,11 @@ for f in .claude/hooks/*.sh scripts/*.sh; do bash -n "$f" || err "$f: syntax err
 tracked=$(git ls-files 2>/dev/null)
 if [ -n "$tracked" ]; then
   echo "$tracked" | grep -E '^(private|data|inputs|outputs|archivos de guia)(/|$)' && err "private paths are tracked"
+  # The banned-terms list is private (git-ignored), so this check only runs locally; CI cannot see it.
   if [ -f data/banned-terms.txt ]; then
-    while IFS= read -r t; do
+    while IFS= read -r t || [ -n "$t" ]; do
       case "$t" in ''|\#*) continue;; esac
-      git grep -n -i -F -- "$t" -- . ':!README*' >/dev/null 2>&1 && err "banned term '$t' appears in tracked files"
+      git grep -n -i -F -- "$t" -- . >/dev/null 2>&1 && err "banned term '$t' appears in tracked files"
     done < data/banned-terms.txt
   fi
 fi
