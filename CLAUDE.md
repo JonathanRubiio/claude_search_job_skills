@@ -10,6 +10,8 @@ Default market: remote LATAM, software development (editable in `data/preference
 - `data/preferences.md`: target roles, must-haves, deal-breakers, salary floor, languages.
 - `data/tracker.md`: pipeline of vacancies and their status.
 - `data/stories.md`: STAR story bank for interviews.
+- `data/site-status.md`: per-user login state, last run and hit rate per site (job-preflight / job-round).
+- `outputs/digests/`: one digest per scheduled discovery round.
 - `data/applications-log.md` and `data/search-log.md`: append-only, dated logs of every application and every search run. They are how discovery avoids repeats and how every action stays traceable.
 - `data/form-data.md`: quick-fill personal data and salary asks for application forms. `data/banned-terms.txt`: terms no deliverable may contain (enforced by a hook).
 - `archivos de guia/` (optional): final deliverables you want to keep handy (CV PDF, letters). Git-ignored.
@@ -20,7 +22,7 @@ Default market: remote LATAM, software development (editable in `data/preference
 
 ## Pipeline
 
-`profile-intake` -> `linkedin-audit` -> `job-discovery` -> `job-fit` -> `cv-tailor` -> `job-apply` (+ `outreach`) -> `interview-prep`, tracked in `tracker`. Site knowledge: `job-sites`.
+`profile-intake` -> `linkedin-audit` / `profile-sync` -> `job-discovery` (+ `site-discovery`, `job-round`) -> `job-fit` -> `cv-tailor` -> `job-apply` (+ `outreach`) -> `interview-prep`, tracked in `tracker`. Site knowledge: `job-sites`.
 The `job-hunt` skill routes between them.
 
 ## Hard rules
@@ -32,5 +34,6 @@ The `job-hunt` skill routes between them.
 5. Keep personal data (CV, phone, email) inside this project; don't send it to third-party services.
 6. Feedback loop: after touching any job site, update its playbook in `.claude/skills/job-sites/playbooks/` and `registry.md` in the same turn, and log the application in `data/tracker.md`.
 7. Traceability: before searching, read the tracker and both logs and surface only new vacancies; after applying or searching, append to the matching log in the same turn with absolute dates.
-8. Do not mention banned terms (`data/banned-terms.txt`) in any deliverable; the hook blocks it.
+8. Scheduled rounds (`job-round`) are discovery-only and read-only: they never apply, connect, message or save. Every Chrome task starts with `job-preflight`; a site that is not `ok` is skipped and reported, never worked around.
+9. Do not mention banned terms (`data/banned-terms.txt`) in any deliverable; the hook blocks it.
 8. Search broad before specific: generic role terms and the site's remote/city/date filters first, stack-specific queries second; triage by reading postings, not by title keywords (see `job-discovery`).
