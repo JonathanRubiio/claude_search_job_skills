@@ -6,9 +6,17 @@ python3 - <<'PY'
 import re, datetime, os
 today = datetime.date.today().isoformat()
 print(f"[job-hunt digest {today}]")
-for f in ("data/profile.md", "data/preferences.md", "data/form-data.md", "data/banned-terms.txt", "data/applications-log.md", "data/search-log.md"):
+for f in ("data/profile.md", "data/preferences.md", "data/form-data.md", "data/banned-terms.txt", "data/applications-log.md", "data/search-log.md", "data/site-status.md"):
     if not os.path.exists(f):
         print(f"- MISSING {f}: run scripts/init.sh, then profile-intake (cold start) if the profile is empty.")
+import glob
+ds = sorted(glob.glob("outputs/digests/*.md"))
+if ds:
+    print("- Latest round digest: " + ds[-1] + " (read it first)")
+if os.path.exists("data/site-status.md"):
+    bad = [l.split("|")[1].strip() + ":" + l.split("|")[2].strip() for l in open("data/site-status.md", encoding="utf-8") if l.startswith("|") and len(l.split("|")) > 3 and l.split("|")[2].strip() in ("needs-login", "denied", "challenge")]
+    if bad:
+        print("- Sites needing the user: " + ", ".join(bad))
 if not os.path.exists("data/tracker.md"):
     raise SystemExit
 counts, due = {}, []
