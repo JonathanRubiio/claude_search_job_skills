@@ -5,13 +5,13 @@ Update the status column as you use each site.
 
 | Site | Role in the funnel | Status | Playbook | Notes |
 |------|--------------------|--------|----------|-------|
-| Get on Board | Remote LATAM tech jobs, native in-site application | done | `getonboard.md` | Profile edited, applications sent |
-| elempleo | Colombian generalist board, one-click apply | done | `elempleo.md` | CV completeness ~85%; profession typeahead fails |
+| Get on Board | Remote LATAM tech jobs, native in-site application | done | `getonboard.md` | Profile edited, GitHub in Portafolio (2026-11-03), applications sent |
+| elempleo | Colombian generalist board, one-click apply | done | `elempleo.md` | CV 95% (2026-11-03); formal study Ing. Sistemas pending study city; profession typeahead fails |
 | Computrabajo | Colombian board, strong for on-site roles outside Bogotá | done | `computrabajo.md` | CV wizard done; one-click apply |
 | LinkedIn Jobs | Biggest volume; mostly senior / English | partial | `linkedin.md` | Search URLs recorded; Easy Apply untested; external "Solicitar" opens an ATS |
 | External ATS forms | Dynamics ATS, agency forms | partial | `external-forms.md` | Remote Leverage dropped (needs English audio) |
 | Torre | Global network, Colombia sub-communities | blocked | `torre.md` | Agent cannot click/read results; user must paste `/post/` links or allow the domain |
-| Indeed Colombia | Aggregator | partial | `indeed.md` | Readable; Cloudflare human check after ~3 searches (user must pass it) |
+| Indeed Colombia | Aggregator | partial | `indeed.md` | Readable; CV upload via file input not saved (user uploads by hand); Cloudflare human check after ~3 searches (user must pass it) |
 | Magneto365 | Colombian board | blocked | `magneto365.md` | Extension denies reading the domain |
 | Hireline | LATAM remote tech | done | `hireline.md` | Very low volume; recheck monthly |
 | Remotive | Remote aggregator (mostly contractor) | done | `remotive.md` | Paywalled UI; API usable; mostly contractor roles |
@@ -24,6 +24,10 @@ One row per candidate: URL, why it fits, how to search it. `job-round` tests one
 
 | Site | URL | Why it fits | Added |
 |------|-----|-------------|-------|
+| Working Nomads | https://www.workingnomads.com/remote-nodejs-jobs-latin-america | Public page filtered by Node.js + Latin America (27 jobs); premium hides more. Mostly English-process international firms | 2026-11-03 |
+| RemoteOK | https://remoteok.com | Remote-only board with dev tags; many listings open worldwide | 2026-11-03 |
+| Arc | https://arc.dev/remote-jobs | Remote TypeScript roles incl. LATAM-restricted; mostly freelance/contract | 2026-11-03 |
+| Platzi Jobs | https://jobs.platzi.com | LATAM tech board, Spanish-first | 2026-11-03 |
 
 ## Per-user state
 Login state, last search run and hit rate per site are personal and live in `data/site-status.md`, not here.
