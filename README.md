@@ -17,6 +17,21 @@ It is tuned for **remote LATAM software roles** (Get on Board, elempleo, Computr
 - `git`, `bash` and `python3` (the hooks use them). macOS or Linux; Windows via WSL.
 - Your CV (PDF or Word) and, ideally, your LinkedIn and GitHub URLs.
 
+## Chrome and logins: read this before you start
+
+OfferPilot works through **your own Chrome** with the Claude in Chrome extension. That covers reading job boards, improving your profile on each site and submitting applications. It never types your password, so **you must be logged in first**.
+
+Before any browser work, `job-preflight` lists the sites it is about to use, opens each one read-only and records the result in `data/site-status.md`:
+
+| State | Meaning | What you do |
+|-------|---------|-------------|
+| `ok` | logged in | nothing |
+| `needs-login` | login wall or expired session | log in yourself in Chrome |
+| `denied` | the extension blocks that domain | allow the domain in the extension, or paste the content |
+| `challenge` | CAPTCHA / human check | pass it by hand |
+
+Sites that are not `ok` are skipped and reported, never worked around. Log in to **every site you want searched** (see `.claude/skills/job-sites/registry.md`) and keep Chrome open.
+
 ## Quick start
 
 ```bash
@@ -38,6 +53,8 @@ Then type **`empecemos`** or **`job hunt`** (the router skill reads your state a
 
 ## Step by step: from zero to interviews
 
+**Step 0, preflight:** before steps 3, 4 and 7, Claude checks your sessions (see above).
+
 ### First run: no CV, no data? Start here
 Just type `empecemos`. With an empty workspace, `job-hunt` runs `profile-intake` in **cold start** mode: about 20-30 minutes of guided questions in themed rounds (who/where, what you want, languages, each job with metrics, projects, education, skills, gaps, form data). Rough answers are fine; unknowns stay `TODO`, nothing is invented. Raw answers are saved to `inputs/intake-answers.md`, then it writes your profile, preferences, form data and banned terms, and builds a **base CV** (`outputs/base-cv.md`, optional PDF/Word). Only then does it move on to LinkedIn, searching and applying.
 
@@ -46,6 +63,7 @@ Just type `empecemos`. With an empty workspace, `job-hunt` runs `profile-intake`
 |---|------|---------|--------------|---------|
 | 1 | **Build your profile** | "empecemos" / "carga mi CV" | `profile-intake` reads your CV, LinkedIn and GitHub, asks for the missing metrics (max 5 questions per round), lists honest gaps and conflicts, and fills `data/preferences.md` with you (roles, stack, salary floor, deal-breakers, language). | `data/profile.md`, `data/preferences.md` |
 | 2 | **Fill form data** | "llena form-data" | You enter your name, contact data, salary asks and standard answers once. Forms reuse them. Add terms that must never appear in any document (client names, titles) to `data/banned-terms.txt`; a hook blocks them. | `data/form-data.md`, `data/banned-terms.txt` |
+| 2b | **Sync profiles on job sites** | "mejora mis perfiles" | `profile-sync` compares each site's required fields with your master profile, renders text for each site's limits, and (only if you ask) fills them through your Chrome, re-reading every saved section. | filled profiles, updated playbooks |
 | 3 | **Fix LinkedIn** | "audita mi LinkedIn" | `linkedin-audit` scores your profile out of 100, rewrites headline/About/Experience/Skills using only your real facts and keywords from real vacancies. **You paste the changes**; the tool never edits your profile. | `outputs/linkedin-audit-<date>.md` |
 | 4 | **Find vacancies** | "busca ofertas" | `job-discovery` searches the web and your LinkedIn (read-only, low volume), verifies each posting, removes duplicates and registers survivors in the tracker. | rows in `data/tracker.md` |
 | 5 | **Score fit** | paste a job URL/text | `job-fit` returns a 0-100 score with evidence, gaps and an apply / stretch / skip / discard call. | recommendation + `vacancy.md` |
@@ -89,6 +107,18 @@ Selects and reorders real profile facts to answer the vacancy's keywords; single
 ### `job-apply`: submit applications
 Runs only on your explicit chat order for that batch. Six-point gate (authorization, vacancy verified today, honest fit, hard filters, whole flow read first, no duplicates). Uses the site's playbook, fills from `data/form-data.md`, confirms the success screen, logs `applied` with a +7 day follow-up in the tracker. Never types credentials/IDs, creates accounts, solves CAPTCHAs or enters payment data.
 
+### `job-preflight`: sessions and permissions
+Runs before any Chrome task. Lists the sites it will use, checks each one read-only (logged in / login wall / domain denied / CAPTCHA), writes `data/site-status.md` and tells you exactly which URL to log in to. Unattended rounds do a light version and continue with the sites that are `ok`.
+
+### `site-discovery`: grow the list of places to search
+Searches the web for new boards (by country, stack, remote scope, agencies, newsletters), screens them without logging in, and adds them to the registry as `untested` candidates. Candidates are tested one per round; sites with no relevant results twice become `dormant`. The registry gets better every run.
+
+### `job-round`: scheduled discovery rounds (07:00, 12:00, 17:00)
+One round of discovery only, never applying. It reads the tracker and both logs, runs a preflight, rotates through the registry **one site at a time** (oldest-searched first) with queries not used before, dedupes, scores with `job-fit`, queues follow-up drafts, tests a new candidate site, logs everything and writes a digest to `outputs/digests/`. The next time you open Claude Code the digest and the sites needing your login are shown first.
+
+### `profile-sync`: one truth, every site
+Compares what each site requires with your master profile, renders headline/summary/skills/experience within each site's limits, keeps facts, titles and dates consistent across sites, and flags contradictions. LinkedIn text is for you to paste; other sites are filled through Chrome only when you ask.
+
 ### `job-sites`: per-site knowledge base
 A registry (status of each site: done / partial / untested / blocked, search URLs) plus one playbook per site: Get on Board, elempleo, Computrabajo, LinkedIn, Torre, Indeed, Hireline, Remotive, Magneto365, external ATS forms, and cross-site browser-automation lessons. After you use a site, the playbook is updated so the next run is faster. Copy `playbooks/_template.md` to add a site.
 
@@ -101,11 +131,25 @@ Company brief with sources, plan per stage (recruiter screen, technical, behavio
 ### `tracker`: pipeline
 Maintains `data/tracker.md` (`found` > `shortlisted` > `prepared` > `applied` > `screen` > `interview` > `offer` | `rejected` | `ghosted` | `discarded`). Surfaces overdue actions, suggests follow-ups after 10 days, marks ghosted after 21 (asking first), shows funnel conversion and diagnoses the bottleneck (discovery? CV? pitch? interview skills?).
 
+## Daily routine (07:00, 12:00, 17:00)
+
+`job-round` is built for three scheduled passes a day:
+
+| Slot | Focus |
+|------|-------|
+| 07:00 | full rotation (up to 4 sites) + find new sites + due follow-ups |
+| 12:00 | quick pass over boards that post daily (up to 3 sites) |
+| 17:00 | last pass + day summary + suggested apply list for tomorrow |
+
+**Requirements:** your computer on and awake, Chrome open with the extension and with you **logged in to every site in the registry you want searched**. Rounds are read-only: they never apply, connect, message or save. You review the digest and tell Claude which ones to apply to.
+
+**How to start it:** in a Claude Code session use `/loop` with the cron expressions `0 7 * * *`, `0 12 * * *`, `0 17 * * *` and the prompt "run job-round, slot <morning|midday|evening>", or create local scheduled tasks in the Claude desktop app. A session-based `/loop` lives only while the session is open. Cloud routines run without your computer but cannot use your logged-in Chrome, so they only suit public pages. Run one round by hand first, with you present, to confirm the extension works in your setup.
+
 ## Automatic hooks (`.claude/hooks/`)
 
 | Hook | When | What it does |
 |------|------|--------------|
-| `session-digest.sh` | session start | Prints tracker counts, due follow-ups and missing setup files |
+| `session-digest.sh` | session start | Prints tracker counts, due follow-ups, the latest round digest, sites needing your login and missing setup files |
 | `guard-banned-terms.sh` | before Write/Edit | Blocks deliverables in `outputs/` containing any term from `data/banned-terms.txt` |
 | `tracker-lint.sh` | after Write/Edit | Validates tracker rows (columns, status, dates, duplicate IDs) |
 
@@ -113,8 +157,8 @@ Maintains `data/tracker.md` (`found` > `shortlisted` > `prepared` > `applied` > 
 
 ```
 CLAUDE.md                 hard rules for Claude in this project
-.claude/skills/           the system (10 skills + site playbooks)
-.claude/hooks/            session digest, banned-terms guard, tracker lint
+.claude/skills/           the system (14 skills + site playbooks)
+.claude/hooks/            session digest, banned-terms guard, tracker lint; scripts/validate.sh checks the repo
 templates/                blank data files to copy into data/
 private/     (git-ignored) everything personal; data/ inputs/ outputs/ are symlinks into it
 data/        your profile, preferences, tracker, stories, form data

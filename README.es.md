@@ -17,6 +17,21 @@ Está afinado para **roles remotos de desarrollo en LATAM** (Get on Board, elemp
 - `git`, `bash` y `python3` (los hooks los usan). macOS o Linux; en Windows, con WSL.
 - Tu CV (PDF o Word) y, idealmente, tus URLs de LinkedIn y GitHub.
 
+## Chrome y sesiones: léelo antes de empezar
+
+OfferPilot trabaja a través de **tu propio Chrome** con la extensión Claude in Chrome. Eso incluye leer portales, mejorar tu perfil en cada sitio y enviar postulaciones. Nunca escribe tu contraseña, así que **tú debes tener la sesión iniciada antes**.
+
+Antes de cualquier trabajo con navegador, `job-preflight` lista los sitios que va a usar, abre cada uno en solo lectura y guarda el resultado en `data/site-status.md`:
+
+| Estado | Significa | Qué haces tú |
+|--------|-----------|--------------|
+| `ok` | sesión iniciada | nada |
+| `needs-login` | muro de login o sesión vencida | inicia sesión en Chrome |
+| `denied` | la extensión bloquea ese dominio | permite el dominio en la extensión o pega el contenido |
+| `challenge` | CAPTCHA / verificación humana | resuélvela a mano |
+
+Los sitios que no estén en `ok` se omiten y se te informa; nunca se rodea el bloqueo. Inicia sesión en **todos los sitios donde quieras que busque** (ver `.claude/skills/job-sites/registry.md`) y deja Chrome abierto.
+
 ## Inicio rápido
 
 ```bash
@@ -38,6 +53,8 @@ Luego escribe **`empecemos`** o **`job hunt`** (la skill enrutadora lee tu estad
 
 ## Paso a paso: de cero a entrevistas
 
+**Paso 0, preflight:** antes de los pasos 3, 4 y 7, Claude revisa tus sesiones (ver arriba).
+
 ### Primera vez: ¿sin CV y sin datos? Empieza aquí
 Escribe `empecemos`. Con el espacio vacío, `job-hunt` ejecuta `profile-intake` en modo **arranque en frío**: unos 20-30 minutos de preguntas guiadas por bloques (quién y dónde, qué buscas, idiomas, cada trabajo con métricas, proyectos, educación, habilidades, brechas, datos de formularios). Las respuestas pueden ser aproximadas; lo que no sepas queda como `TODO` y nada se inventa. Las respuestas en bruto se guardan en `inputs/intake-answers.md`; luego escribe tu perfil, preferencias, datos de formularios y términos prohibidos, y arma un **CV base** (`outputs/base-cv.md`, PDF/Word opcional). Solo después pasa a LinkedIn, búsqueda y postulaciones.
 
@@ -46,6 +63,7 @@ Escribe `empecemos`. Con el espacio vacío, `job-hunt` ejecuta `profile-intake` 
 |---|------|----------|----------|----------|
 | 1 | **Armar tu perfil** | "empecemos" / "carga mi CV" | `profile-intake` lee tu CV, LinkedIn y GitHub, pregunta las métricas que faltan (máx. 5 preguntas por ronda), lista brechas y conflictos con honestidad, y llena contigo `data/preferences.md` (roles, stack, piso salarial, deal-breakers, idioma). | `data/profile.md`, `data/preferences.md` |
 | 2 | **Datos de formularios** | "llena form-data" | Ingresas una sola vez nombre, contacto, pretensión salarial y respuestas estándar. Los formularios los reutilizan. Agrega a `data/banned-terms.txt` lo que nunca debe aparecer en un documento (nombres de clientes, cargos); un hook lo bloquea. | `data/form-data.md`, `data/banned-terms.txt` |
+| 2b | **Sincronizar perfiles en portales** | "mejora mis perfiles" | `profile-sync` compara los campos que exige cada sitio con tu perfil maestro, adapta el texto a los límites de cada uno y (solo si lo pides) lo llena en tu Chrome, releyendo cada sección guardada. | perfiles completos, playbooks al día |
 | 3 | **Arreglar LinkedIn** | "audita mi LinkedIn" | `linkedin-audit` puntúa tu perfil sobre 100 y reescribe titular/Acerca de/Experiencia/Aptitudes usando solo tus hechos reales y palabras clave de vacantes reales. **Tú pegas los cambios**; la herramienta nunca edita tu perfil. | `outputs/linkedin-audit-<fecha>.md` |
 | 4 | **Buscar vacantes** | "busca ofertas" | `job-discovery` busca en la web y en tu LinkedIn (solo lectura, bajo volumen), verifica cada oferta, quita duplicados y registra las que sobreviven en el tracker. | filas en `data/tracker.md` |
 | 5 | **Medir el encaje** | pega URL/texto de una oferta | `job-fit` devuelve un puntaje 0-100 con evidencia, brechas y veredicto: postular / stretch / saltar / descartar. | recomendación + `vacancy.md` |
@@ -89,6 +107,18 @@ Selecciona y reordena hechos reales del perfil para responder a las palabras cla
 ### `job-apply`: enviar postulaciones
 Corre solo con tu orden explícita en el chat para ese lote. Compuerta de seis puntos (autorización, vacante verificada hoy, encaje honesto, filtros duros, flujo completo leído antes, sin duplicados). Usa el playbook del sitio, llena desde `data/form-data.md`, confirma la pantalla de éxito y registra `applied` con seguimiento a +7 días en el tracker. Nunca escribe credenciales/documentos, crea cuentas, resuelve CAPTCHAs ni ingresa datos de pago.
 
+### `job-preflight`: sesiones y permisos
+Corre antes de cualquier tarea con Chrome. Lista los sitios que usará, revisa cada uno en solo lectura (con sesión / muro de login / dominio denegado / CAPTCHA), escribe `data/site-status.md` y te dice qué URL abrir para iniciar sesión. Las rondas sin supervisión hacen una versión ligera y siguen con los sitios que estén `ok`.
+
+### `site-discovery`: ampliar la lista de lugares donde buscar
+Busca en la web portales nuevos (por país, stack, alcance remoto, agencias, newsletters), los evalúa sin iniciar sesión y los agrega al registro como candidatos `untested`. Se prueba uno por ronda; los que no devuelven nada relevante dos veces pasan a `dormant`. El registro mejora en cada ejecución.
+
+### `job-round`: rondas programadas (7:00, 12:00, 17:00)
+Una ronda de solo descubrimiento, nunca postula. Lee el tracker y ambas bitácoras, hace preflight, recorre el registro **sitio por sitio** (primero el menos buscado) con consultas no usadas antes, deduplica, puntúa con `job-fit`, deja borradores de seguimiento, prueba un sitio candidato nuevo, registra todo y escribe un resumen en `outputs/digests/`. La próxima vez que abras Claude Code verás primero ese resumen y los sitios que necesitan tu sesión.
+
+### `profile-sync`: una verdad, todos los sitios
+Compara lo que pide cada sitio con tu perfil maestro, adapta titular/resumen/habilidades/experiencia a los límites de cada uno, mantiene coherentes hechos, cargos y fechas, y señala contradicciones. El texto de LinkedIn lo pegas tú; los demás sitios se llenan por Chrome solo cuando lo pides.
+
 ### `job-sites`: conocimiento por sitio
 Un registro (estado de cada sitio: done / partial / untested / blocked, URLs de búsqueda) y un playbook por sitio: Get on Board, elempleo, Computrabajo, LinkedIn, Torre, Indeed, Hireline, Remotive, Magneto365, formularios ATS externos y lecciones de automatización de navegador comunes a todos. Después de usar un sitio, el playbook se actualiza para que la próxima vez sea más rápido. Copia `playbooks/_template.md` para agregar un sitio.
 
@@ -101,11 +131,25 @@ Brief de la empresa con fuentes, plan por etapa (screen con recruiter, técnica,
 ### `tracker`: embudo
 Mantiene `data/tracker.md` (`found` > `shortlisted` > `prepared` > `applied` > `screen` > `interview` > `offer` | `rejected` | `ghosted` | `discarded`). Muestra acciones vencidas, sugiere seguimiento a los 10 días, marca ghosted a los 21 (preguntando antes), calcula conversión del embudo y diagnostica el cuello de botella (¿descubrimiento? ¿CV? ¿pitch? ¿entrevistas?).
 
+## Rutina diaria (7:00, 12:00, 17:00)
+
+`job-round` está pensada para tres pasadas al día:
+
+| Franja | Enfoque |
+|--------|---------|
+| 7:00 | rotación completa (hasta 4 sitios) + buscar sitios nuevos + seguimientos vencidos |
+| 12:00 | pasada rápida por portales que publican a diario (hasta 3 sitios) |
+| 17:00 | última pasada + resumen del día + lista sugerida para postular mañana |
+
+**Requisitos:** computador encendido y despierto, Chrome abierto con la extensión y **sesión iniciada en todos los sitios del registro donde quieras que busque**. Las rondas son de solo lectura: no postulan, conectan, escriben ni guardan. Tú revisas el resumen y le dices a Claude a cuáles postular.
+
+**Cómo iniciarla:** en una sesión de Claude Code usa `/loop` con las expresiones cron `0 7 * * *`, `0 12 * * *`, `0 17 * * *` y el prompt "ejecuta job-round, franja <morning|midday|evening>", o crea tareas programadas locales en la app de escritorio de Claude. Un `/loop` de sesión vive solo mientras la sesión esté abierta. Las rutinas en la nube corren sin tu computador pero no pueden usar tu Chrome con sesión, así que solo sirven para páginas públicas. Ejecuta primero una ronda a mano, contigo presente, para confirmar que la extensión funciona en tu entorno.
+
 ## Hooks automáticos (`.claude/hooks/`)
 
 | Hook | Cuándo | Qué hace |
 |------|--------|----------|
-| `session-digest.sh` | al iniciar sesión | Imprime conteos del tracker, seguimientos vencidos y archivos de configuración faltantes |
+| `session-digest.sh` | al iniciar sesión | Imprime conteos del tracker, seguimientos vencidos, el último resumen de ronda, sitios que necesitan tu sesión y archivos faltantes |
 | `guard-banned-terms.sh` | antes de Write/Edit | Bloquea entregables en `outputs/` que contengan algún término de `data/banned-terms.txt` |
 | `tracker-lint.sh` | después de Write/Edit | Valida las filas del tracker (columnas, estado, fechas, IDs duplicados) |
 
@@ -113,8 +157,8 @@ Mantiene `data/tracker.md` (`found` > `shortlisted` > `prepared` > `applied` > `
 
 ```
 CLAUDE.md                 reglas duras para Claude en este proyecto
-.claude/skills/           el sistema (10 skills + playbooks por sitio)
-.claude/hooks/            resumen de sesión, guardia de términos, lint del tracker
+.claude/skills/           el sistema (14 skills + playbooks por sitio)
+.claude/hooks/            resumen de sesión, guardia de términos, lint del tracker; scripts/validate.sh valida el repo
 templates/                archivos de datos en blanco para copiar a data/
 private/     (git-ignored) todo lo personal; data/ inputs/ outputs/ son enlaces simbólicos a esta carpeta
 data/        tu perfil, preferencias, tracker, historias, datos de formularios
