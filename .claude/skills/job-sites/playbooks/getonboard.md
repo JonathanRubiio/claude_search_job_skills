@@ -41,8 +41,15 @@
 - Invitations can be stale (8 months old) and for Freelance contracts: check the filters before applying.
 
 ## Gotchas
+- Tag pages (`/jobs/tag/<tag>`): `javascript_tool` returns `[BLOCKED: Cookie/query string data]` when the output contains hrefs with query strings; return `a.pathname` only, or read the list with `get_page_text` (~50 cards, 3 pages). Then open each candidate and slice `document.body.innerText` from "Más trabajos de".
+- Job header shows `Senior`/`Mid` level, contractor wording in the description, and the applicant count: use them to discard fast (1000+ applicants and old replies = low odds).
 - Same company often posts the same role twice (e.g. "Full-Stack con IA"): apply once, skip duplicates.
 - Contract type is often unstated: ask in the interview, note `confirm` in the tracker.
 - Listing pages show applicant counts (1,500+ on some): apply early with a specific letter.
 - Some roles are "LATAM residents only, Chile-compatible hours": state your timezone in the text.
 - Real clicks on "Siguiente" sometimes do nothing; use the JS click.
+
+## Profile completion check (2026-11-03)
+- `webpros/edit` has no GitHub field; the "Portafolio" field now holds the GitHub URL (all three "Guardar todos los cambios" buttons belong to the same form).
+- A YouTube URL (`webpro[youtube]`) was already present and unknown to the agent: the user should confirm it is intended.
+- Description line: "Desarrollador Backend NestJS y Node.js".
