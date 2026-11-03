@@ -16,6 +16,7 @@ File: `data/tracker.md`. One row per vacancy.
   3. Funnel counts: found -> shortlisted -> applied -> screen -> interview -> offer, with conversion rates.
   4. Diagnose the bottleneck: low shortlist = discovery/filters; applied but no screens = CV/profile (`linkedin-audit`, `cv-tailor`); screens but no interviews = pitch; interviews but no offers = `interview-prep`.
   5. Recommend 1-3 concrete actions for the week.
+- **weekly report** (Fridays or on request): write `outputs/weekly-<YYYY-MM-DD>.md` with funnel counts and conversion, new vacancies per site (from `data/search-log.md`), best-yielding sites, applications opened/answered (when a site shows it), stale rows, bottleneck diagnosis and the plan for next week.
 - **archive**: move `rejected`/`discarded`/`ghosted` older than 60 days to a `## Archive` section.
 
 ## Traceability files

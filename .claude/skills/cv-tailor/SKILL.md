@@ -21,6 +21,9 @@ Inputs: `outputs/<date>-<company>-<role>/vacancy.md` (from `job-fit`), `data/pro
 6. Save to `outputs/<date>-<company>-<role>/`: `cv.md`, `cover-letter.md`, `keyword-check.md`. Offer export to .docx/.pdf using the docx/pdf skills; filename `Name_Surname_<Role>.pdf`.
 7. Update tracker status to `prepared`.
 
+## ATS audit (on request or monthly)
+Take the 10 most recent shortlisted/found vacancies in the tracker, extract their recurring keywords, and compare with the base CV: coverage %, missing keywords split into *true for the user* (add) and *not true* (honest gap, never add), formatting risks (tables, columns, icons, non-standard headings). Save to `outputs/ats-audit-<date>.md`.
+
 ## Base CV mode (no vacancy)
 Used by `profile-intake` right after a cold start, or when the user asks for a general CV. Same structure and honesty rules, but the angle is the user's target role from `data/preferences.md` instead of one vacancy. Save as `outputs/base-cv.md` (and .pdf/.docx on request). `job-apply` can use it when no tailored CV exists; tailor per vacancy when fit is >= 60.
 

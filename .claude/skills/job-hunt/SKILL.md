@@ -13,6 +13,7 @@ Reads the project state and decides the next step. Never do a step's work here; 
 2. `data/preferences.md` — blanks in roles/stack/salary/deal-breakers? -> ask the user, fill it.
 3. LinkedIn audit done? (`outputs/linkedin-audit-*.md` exists) -> if not, `linkedin-audit`.
 4. `data/tracker.md` — empty or stale (>7 days since last `found`)? -> `job-discovery`.
+4b. Any Chrome task coming up (profile edits, discovery, applying)? -> `job-preflight` first; tell the user which sites need their login.
 5. Entries `shortlisted` without a folder in `outputs/` -> `job-fit` then `cv-tailor`; submit with `job-apply` only when the user asks.
 6. Entries `screen`/`interview` -> `interview-prep`.
 7. Overdue `Next action` / `Due` in tracker -> surface first.
@@ -29,9 +30,14 @@ Reads the project state and decides the next step. Never do a step's work here; 
 | Apply / "postula" / send applications | `job-apply` (gate, then site playbook) |
 | How a site works, build profile on a job site, add a site | `job-sites` |
 | Prepare for screen/technical/behavioral | `interview-prep` |
-| Status, follow-ups, metrics | `tracker` |
+| Status, follow-ups, metrics, weekly report | `tracker` |
+| Check logins / extension before browser work | `job-preflight` |
+| Run a discovery round now / schedule 07:00-12:00-17:00 | `job-round` |
+| More places to search / grow the site list | `site-discovery` |
+| Improve or sync profiles on job sites | `profile-sync` |
 
 ## Weekly cadence to propose
+- Daily 07:00 / 12:00 / 17:00 (if the user enabled it): `job-round` (discovery only; read the latest `outputs/digests/` file first).
 - Mon: `job-discovery` (new batch) + `job-fit` on results.
 - Tue-Thu: `cv-tailor` + `outreach` for top 5 fits, user applies/sends.
 - Fri: `tracker` review, follow-ups, `interview-prep` for upcoming.
