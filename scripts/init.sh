@@ -18,6 +18,8 @@ copy stories.example.md       stories.md
 copy banned-terms.example.txt banned-terms.txt
 copy applications-log.example.md applications-log.md
 copy search-log.example.md search-log.md
+copy site-status.example.md site-status.md
+mkdir -p private/outputs/digests
 
 echo "Done. Your personal files live in ./private (git-ignored)."
 echo "Open Claude Code here (claude) and type: empecemos. With or without a CV, it will guide you."
