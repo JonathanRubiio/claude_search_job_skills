@@ -26,3 +26,6 @@
 
 ## Calibration
 Results tend to be on-site in Bogotá, Python/Java/.NET, senior, or English-required. Expect a low hit rate for mid-level remote Node/TypeScript roles; do not lower the filters to inflate numbers.
+
+## CV upload (example run: NOT saved)
+Profile page `https://profile.indeed.com/` (menu icon > Perfil) shows "Subir HV". The button is not a file input: clicking it creates a hidden `input[type=file]`; `find` it and `file_upload` accepted the PDF (4 KB) but the page never showed it, even after reload. Not retried (no loops). User must click "Subir HV" and pick your CV PDF by hand. The profile also shows an empty "Nombre" and no phone: user to fill.
